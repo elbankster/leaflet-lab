@@ -1,5 +1,6 @@
+* { margin:0; padding:0; }
 body {
-    margin: 0;
+    font-family:sans-serif;
     display: flex;
     height: 100vh;
 }
@@ -7,8 +8,8 @@ body {
 #left {
     width: 20%;
     background-color: #f4f4f4;
-    padding: 10px;
     overflow-y: auto;
+    border-right: 1px dotted gray;
 }
 
 #center {
@@ -17,13 +18,19 @@ body {
     flex-direction: column;
 }
 
+#right {
+    width: 20%;
+    background-color: #f4f4f4;
+    
+    overflow-y: auto;
+    border-left: 1px dotted gray;
+}
+
 #map {
     flex-grow: 1;
 }
 
-#right {
-    width: 20%;
-    background-color: #f4f4f4;
-    padding: 10px;
-    overflow-y: auto;
+h2 {
+    background: #ddd;
+    padding:5px
 }
