@@ -6,20 +6,20 @@ body {
 }
 
 #left {
-    width: 20%;
+    width: 25%;
     background-color: #f4f4f4;
     overflow-y: auto;
     border-right: 1px dotted gray;
 }
 
 #center {
-    width: 60%;
+    width: 50%;
     display: flex;
     flex-direction: column;
 }
 
 #right {
-    width: 20%;
+    width: 25%;
     background-color: #f4f4f4;
     
     overflow-y: auto;
@@ -30,7 +30,41 @@ body {
     flex-grow: 1;
 }
 
-h2 {
+h1, h2 {
     background: #ddd;
-    padding:5px
+    padding:5px;
+    margin:5px 0;
+
+}
+
+#location-details h2 {
+    margin-top: 20px;
+    background: #555;
+    color: #eee;
+}
+
+li { cursor: pointer; }
+
+.trips {
+    padding: 10px;
+    margin: 10px;
+    border: 1px dotted gray;
+    font-size:0.9em;    
+}
+
+.trips table {
+    width:100%;
+    text-align:center;
+}
+
+#trips h3 { 
+    margin: 20px auto 10px auto;
+    padding:0 auto; 
+    text-align: center; 
+    background: #ddd; 
+    color: #333; 
+    padding: 3px;
+    font-size:0.8em;
+    text-transform:uppercase;
+    letter-spacing: 0.2em;
 }

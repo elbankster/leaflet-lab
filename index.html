@@ -17,20 +17,70 @@
 <body>
 
 <div id="left">
-    <h2>Locations</h2>
-    <ul>
-        <li>Gibbons Park</li>
-        <li>Komoka</li>
-    </ul>
+    <h1>Locations</h2>
+    <ul id="user-locations-list"></ul>
 
-    <h2>Location Details</h2>
+    <div id="location-details">
+        <h2>Location Details</h2>
+        <p>Select a location to view its details.</p>
+    </div>
     
+    <!-- Trips Table -->
+    <div id="trips">
+        <h3>Trips Starting from this Location</h3>
+        <table class="trips">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Take-out</th>
+                    <th>Distance (km)</th>
+                    <th>Flow</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Trip rows will be added dynamically here -->
+                <tr>
+                    <td>Aug 22</td>
+                    <td>18:35</td>
+                    <td>20:00</td>
+                    <td>Wonderland</td>
+                    <td>5.5</td>
+                    <td>6.4</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>    
 </div>
 <div id="center">
     <div id="map"></div>
 </div>
 <div id="right">
     <h2>Trips</h2>
+    <table class="trips">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Take-out</th>
+                <th>Distance (km)</th>
+                <th>Flow</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Trip rows will be added dynamically here -->
+            <tr>
+                <td>Aug 22</td>
+                <td>18:35</td>
+                <td>20:00</td>
+                <td>Wonderland</td>
+                <td>5.5</td>
+                <td>6.4</td>
+            </tr>
+        </tbody>        
+    </table>    
 </div>
 
 <script type="module">
@@ -40,16 +90,27 @@
         attribution: '© OpenStreetMap'
     });
 
-    // layer groups
-    var public_launches = L.layerGroup();
-    var user_locations = L.layerGroup();
-
-    const map = L.map('map', {
+// Initialize the map
+const map = L.map('map', {
     center: [42.98, -81.24],
     zoom: 12,
-    layers: [osm, public_launches, user_locations]
-    });
+    layers: [osm] // Add base layer here, other layers will be added later
+});
 
+// Create custom panes for layering
+map.createPane('userLocationsPane');
+map.getPane('userLocationsPane').style.zIndex = 800; // Higher z-index
+
+map.createPane('publicLaunchesPane');
+map.getPane('publicLaunchesPane').style.zIndex = 400; // Lower z-index
+
+// Define the layer groups and assign them to the panes
+var user_locations = L.layerGroup([], { pane: 'userLocationsPane' });
+var public_launches = L.layerGroup([], { pane: 'publicLaunchesPane' });
+
+// Add layers to the map
+map.addLayer(public_launches);
+map.addLayer(user_locations);
     var launchIcon = L.icon({
         iconUrl: 'media/boat_launch.png',
         iconSize: [30, 30], 
@@ -61,7 +122,6 @@
         iconSize: [30, 30], 
         iconAnchor: [15, 5],
     });
-
     
     // query public launches and place the markers
     async function addPublicLaunches() {
@@ -167,18 +227,61 @@
                 return;
             }
 
+            // Get reference to the list element
+            const locationsList = document.getElementById('user-locations-list');
+            const locationDetails = document.getElementById('location-details');
+
+            // Clear any existing items in the list
+            locationsList.innerHTML = '';
+
             data.forEach(location => {
                 const marker = L.marker([location.lat, location.lon], { icon: putInIcon })
                     .addTo(user_locations)
                     .bindPopup(`
                         <strong>${location.name}</strong><br>
                         ${location.waterway}<br>
-                        Flow: ${location.flow_rec || 'N/A'} (Recommended)<br>
+                        Recommended flow: ${location.flow_rec || 'N/A'}<br>
                         Min: ${location.flow_low || 'N/A'}, Max: ${location.flow_high || 'N/A'}
                     `);
 
+                // Add a click event to the marker to update the location details
+                marker.on('click', () => {
+                    // Update the Location Details section
+                    locationDetails.innerHTML = `
+                        <h2>${location.name}</h2>
+                        <p><strong>Waterway:</strong> ${location.waterway}</p>
+                        <p><strong>Recommended Flow:</strong> ${location.flow_rec || 'N/A'}</p>
+                        <p><strong>Min Flow:</strong> ${location.flow_low || 'N/A'}</p>
+                        <p><strong>Max Flow:</strong> ${location.flow_high || 'N/A'}</p>
+                    `;
+                });                    
+
                 user_locations.addLayer(marker);
+
+                // Create a list item for the location
+                const listItem = document.createElement('li');
+                listItem.textContent = location.name;
+
+                // Add a click event to zoom to the marker on the map
+                listItem.addEventListener('click', () => {
+                    map.setView([location.lat, location.lon], 12);
+                    marker.openPopup();
+
+                    // Update the Location Details section
+                    locationDetails.innerHTML = `
+                        <h2>${location.name}</h2>
+                        <p><strong>Waterway:</strong> ${location.waterway}</p>
+                        <p><strong>Recommended Flow:</strong> ${location.flow_rec || 'N/A'}</p>
+                        <p><strong>Min Flow:</strong> ${location.flow_low || 'N/A'}</p>
+                        <p><strong>Max Flow:</strong> ${location.flow_high || 'N/A'}</p>
+                    `;                    
+                });
+
+                // Append the list item to the unordered list
+                locationsList.appendChild(listItem);                  
             });
+
+                      
 
             console.log("User locations loaded:", data);
         } catch (err) {
@@ -186,8 +289,8 @@
         }
     }    
 
-    addPublicLaunches();
     loadUserLocations();
+    addPublicLaunches();
 
     map.on('moveend',addPublicLaunches);
     map.on('click', addUserLocation);
@@ -198,8 +301,8 @@
     };
 
     var overlayLayers = {
-        "Public Launches": public_launches,
-        "User Locations": user_locations
+        "User Locations": user_locations,
+        "Public Launches": public_launches
     };
 
     L.control.layers(baseLayers, overlayLayers).addTo(map);
