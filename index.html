@@ -26,7 +26,7 @@
     </div>
     
     <!-- Trips Table -->
-    <div id="trips">
+    <div id="tripslog">
         <h3>Trips Starting from this Location</h3>
         <table class="trips">
             <thead>
@@ -41,14 +41,7 @@
             </thead>
             <tbody>
                 <!-- Trip rows will be added dynamically here -->
-                <tr>
-                    <td>Aug 22</td>
-                    <td>18:35</td>
-                    <td>20:00</td>
-                    <td>Wonderland</td>
-                    <td>5.5</td>
-                    <td>6.4</td>
-                </tr>
+
             </tbody>
         </table>
     </div>    
@@ -116,14 +109,7 @@
         </thead>
         <tbody>
             <!-- Trip rows will be added dynamically here -->
-            <tr>
-                <td>Aug 22</td>
-                <td>18:35</td>
-                <td>20:00</td>
-                <td>Wonderland</td>
-                <td>5.5</td>
-                <td>6.4</td>
-            </tr>
+            
         </tbody>        
     </table>    
 
@@ -211,7 +197,6 @@
         console.error('Error fetching data:', error);
     });
 }
-
 
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -394,6 +379,9 @@
 
             // Add locations as options
             data.forEach(location => {
+
+                console.log(location);
+
                 const option = document.createElement('option');
                 option.value = location.id; // Assuming the location ID is a unique identifier
                 option.textContent = location.name;
@@ -409,9 +397,8 @@
         }
     }
 
-    // Event listener to handle trip form submission
-    document.getElementById('trip-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
+    async function addTrip() {
+        this.preventDefault();
 
         const fromLocationId = document.getElementById('from-location').value;
         const toLocationId = document.getElementById('to-location').value;
@@ -441,6 +428,8 @@
                 alert('Failed to save the trip. Please try again.');
             } else {
                 // Update the trips table dynamically (optional)
+                console.log(data);
+                
                 const tripsTable = document.querySelector('.trips tbody');
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
@@ -461,7 +450,10 @@
         document.getElementById('trip-form').reset();
         document.getElementById('add-trip-form').style.display = 'none';
         document.getElementById('add-trip-btn').style.display = 'block';
-    });
+    }
+
+    // Event listener to handle trip form submission
+    document.getElementById('trip-form').addEventListener('submit', addTrip());
 
     // Load locations when the page loads
     loadLocationDropdowns();
