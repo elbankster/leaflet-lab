@@ -73,3 +73,15 @@ table.trips {
     padding:5px;
     margin: 10px;
 }
+
+#trip-form {
+    padding:10px;
+}
+
+fieldset {
+    padding:10px;
+}
+
+.form-group {
+    padding-bottom:10px;
+}
