@@ -21,7 +21,6 @@ body {
 #right {
     width: 25%;
     background-color: #f4f4f4;
-    
     overflow-y: auto;
     border-left: 1px dotted gray;
 }
@@ -37,7 +36,7 @@ h1, h2 {
 
 }
 
-#location-details h2 {
+#location-details h2, #trip-details h2 {
     margin-top: 20px;
     background: #555;
     color: #eee;
@@ -48,13 +47,14 @@ li { cursor: pointer; }
 .trips {
     padding: 10px;
     margin: 10px;
-    border: 1px dotted gray;
     font-size:0.9em;    
 }
 
-.trips table {
-    width:100%;
+table.trips {
     text-align:center;
+    padding: 0 auto;
+    margin: 0 auto;
+    width:99%;
 }
 
 #trips h3 { 
@@ -67,4 +67,9 @@ li { cursor: pointer; }
     font-size:0.8em;
     text-transform:uppercase;
     letter-spacing: 0.2em;
+}
+
+#add-trip-btn {
+    padding:5px;
+    margin: 10px;
 }
