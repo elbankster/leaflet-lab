@@ -1,35 +1,4 @@
-@media (max-width: 768px) {
-    #left, #center, #right {
-        width: 100%;
-        margin: 0;
-    }
-
-    #map {
-        height: 300px; /* Adjust map height */
-    }
-}
-
-@media (min-width: 768px) {
-    #left {
-        float: left;
-        width: 25%;
-    }
-    #center {
-        float: left;
-        width: 50%;
-    }
-    #right {
-        float: left;
-        width: 25%;
-    }
-}
-
 * { margin:0; padding:0; }
-
-#left, #center, #right {
-    float: none;
-    width: 100%;
-}
 
 body {
     font-family:sans-serif;

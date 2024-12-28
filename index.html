@@ -5,7 +5,7 @@
 	<base target="_top">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
+
 	<title>Leaflet</title>
 	
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -427,11 +427,11 @@
         try {
             // Insert trip into the database (replace with the correct table and structure)
             const { data, error } = await supabase
-                .from('trips')
+                .from('trip')
                 .insert([{
-                    from_location_id: fromLocationId,
-                    to_location_id: toLocationId,
+                    from_location: fromLocationId,
                     start_time: startTime,
+                    to_location: toLocationId,
                     end_time: endTime,
                     flow: flow
                 }]);
