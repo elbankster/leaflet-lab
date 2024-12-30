@@ -161,42 +161,42 @@
     
     // query public launches and place the markers
     async function addPublicLaunches() {
-    // get window bounds, used to build overpass query string
-    const bounds = map.getBounds();
+        // get window bounds, used to build overpass query string
+        const bounds = map.getBounds();
 
-    // build query string
-    const query = `
-        [out:json];
-        node["leisure"="slipway"](${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()});out;
-    `;
-    
-    var url = 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query);
-    
-    // get data from url
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
+        // build query string
+        const query = `
+            [out:json];
+            node["leisure"="slipway"](${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()});out;
+        `;
+        
+        var url = 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query);
+        
+        // get data from url
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
 
-        // Process the data returned
-        data.elements.forEach(element => {
-            if (element.type === 'node') {
-                // Add marker to the map
-                var marker = L.marker([element.lat, element.lon], { icon: launchIcon, pane: 'publicLaunchesPane' });
-                
-                // If this node has a name identified, add it as a popup
-                if (element.tags.name) {
-                    marker.bindPopup(element.tags.name);
+            // Process the data returned
+            data.elements.forEach(element => {
+                if (element.type === 'node') {
+                    // Add marker to the map
+                    var marker = L.marker([element.lat, element.lon], { icon: launchIcon, pane: 'publicLaunchesPane' });
+                    
+                    // If this node has a name identified, add it as a popup
+                    if (element.tags.name) {
+                        marker.bindPopup(element.tags.name);
+                    }
+
+                    public_launches.addLayer(marker);
                 }
-
-                public_launches.addLayer(marker);
-            }
+            });
+        
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
         });
-    
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-    });
-}
+    }
 
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
