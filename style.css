@@ -58,7 +58,7 @@ table.trips {
     width:99%;
 }
 
-#triplog h3 { 
+#tripslog h3 { 
     margin: 20px auto 10px auto;
     padding:0 auto; 
     text-align: center; 
@@ -68,6 +68,11 @@ table.trips {
     font-size:0.8em;
     text-transform:uppercase;
     letter-spacing: 0.2em;
+}
+
+table.starting-trip { 
+    text-align: center;
+    width:100%;
 }
 
 #add-trip-btn {
@@ -86,3 +91,24 @@ fieldset {
 .form-group {
     padding-bottom:10px;
 }
+
+.trips th {background:#888; color:#fff;}
+
+.trips td { cursor: pointer; padding:2px; }
+
+#user-locations-list {
+    padding: 5px;
+    margin: 5px;
+    font-size:0.9em;  
+    text-decoration: none;
+    list-style-type: none;  
+}
+#user-locations-list li {
+    padding:2px;
+}
+
+#location-details p {
+    padding:5px;
+}
+
+.hidden { display: none; }

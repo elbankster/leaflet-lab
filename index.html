@@ -1,466 +1,603 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<base target="_top">
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <base target="_top">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Leaflet</title>
-	
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <title>Leaflet</title>
+        
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="style.css" crossorigin=""/>
-</head>
-<body>
+        <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+        <link rel="stylesheet" href="style.css" crossorigin=""/>
+    </head>
+    <body>
 
-<div id="left">
-    <h1>Locations</h2>
-    <ul id="user-locations-list"></ul>
+    <div id="left">
+        <h1>Locations</h2>
+        <ul id="user-locations-list"></ul>
 
-    <div id="location-details">
-        <h2>Location Details</h2>
-        <p>Select a location to view its details.</p>
+        <div id="location-details">
+            <h2>Location Details</h2>
+            <p>Select a location to view its details.</p>
+        </div>
+
+        <!-- Trips Table -->
+        <div id="tripslog" class="hidden">
+            <h3>Trips from this location</h3>
+            <table class="starting-trip">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>End</th>
+                        <th>Distance (km)</th>
+                        <th>Flow</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Trip rows will be added dynamically here -->
+
+                </tbody>
+            </table>        
+        
+        </div>    
     </div>
-    
-    <!-- Trips Table -->
-    <div id="tripslog">
-        <h3>Trips Starting from this Location</h3>
+    <div id="center">
+        <div id="map"></div>
+    </div>
+    <div id="right">
+        <h1>Trips</h1>
+        <!-- Add Trip Form (Initially Hidden) -->
+        <div id="add-trip-form" style="display: none;">
+            <h3>Add New Trip</h3>
+            <form id="trip-form">
+                <fieldset>
+                    <legend>Trip Details</legend>
+            
+                    <div class="form-group">
+                        <label for="from-location">From:</label>
+                        <select id="from-location" required>
+                            <!-- Locations will be added dynamically here -->
+                        </select>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="to-location">To:</label>
+                        <select id="to-location" required>
+                            <!-- Locations will be added dynamically here -->
+                        </select>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="start-time">Start Time:</label>
+                        <input type="datetime-local" id="start-time" required>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="end-time">End Time:</label>
+                        <input type="datetime-local" id="end-time" required>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="distance">Distance:</label>
+                        <input type="float" id="distance" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="flow">Flow (m³/s):</label>
+                        <input type="number" id="flow" step="0.1" required>
+                    </div>
+            
+                    <div class="form-actions">
+                        <button type="submit">Submit Trip</button>
+                        <button type="button" id="cancel-trip-btn">Cancel</button>
+                    </div>
+                </fieldset>
+            </form>
+            
+        </div>    
+        <button id="add-trip-btn">Add New Trip</button>
         <table class="trips">
             <thead>
                 <tr>
                     <th>Date</th>
                     <th>Start</th>
                     <th>End</th>
-                    <th>Take-out</th>
-                    <th>Distance (km)</th>
-                    <th>Flow</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Trip rows will be added dynamically here -->
+                
+            </tbody>        
+        </table>    
 
-            </tbody>
-        </table>
-    </div>    
-</div>
-<div id="center">
-    <div id="map"></div>
-</div>
-<div id="right">
-    <h2>Trips</h2>
-    <!-- Add Trip Form (Initially Hidden) -->
-    <div id="add-trip-form" style="display: none;">
-        <h3>Add New Trip</h3>
-        <form id="trip-form">
-            <fieldset>
-                <legend>Trip Details</legend>
+        <div id="trip-details">
+            <h2>Trip Details</h2>
+            <p>Select a trip to view its details.</p>
+        </div>    
+    </div>
+
+    <script type="module">
         
-                <div class="form-group">
-                    <label for="from-location">From:</label>
-                    <select id="from-location" required>
-                        <!-- Locations will be added dynamically here -->
-                    </select>
-                </div>
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        });
+
+        // Initialize the map
+        const map = L.map('map', {
+            center: [42.98, -81.24],
+            zoom: 12,
+            layers: [osm] // Add base layer here, other layers will be added later
+        });
+
+        // Create custom panes for layering
+        map.createPane('userLocationsPane');
+        map.getPane('userLocationsPane').style.zIndex = 210; // Higher z-index
+
+        map.createPane('publicLaunchesPane');
+        map.getPane('publicLaunchesPane').style.zIndex = 200; // Lower z-index
+
+        // Define the layer groups and assign them to the panes
+        var user_locations = L.layerGroup([], { pane: 'userLocationsPane' });
+        var public_launches = L.layerGroup([], { pane: 'publicLaunchesPane' });
+
+        // Add layers to the map
+        map.addLayer(public_launches);
+        map.addLayer(user_locations);
+        var launchIcon = L.icon({
+            iconUrl: 'media/boat_launch.png',
+            iconSize: [30, 30], 
+            iconAnchor: [15,0], 
+        });
+
+        var putInIcon = L.icon({
+            iconUrl: 'media/oars.png',
+            iconSize: [30, 30], 
+            iconAnchor: [15, 5],
+        });
         
-                <div class="form-group">
-                    <label for="to-location">To:</label>
-                    <select id="to-location" required>
-                        <!-- Locations will be added dynamically here -->
-                    </select>
-                </div>
-        
-                <div class="form-group">
-                    <label for="start-time">Start Time:</label>
-                    <input type="datetime-local" id="start-time" required>
-                </div>
-        
-                <div class="form-group">
-                    <label for="end-time">End Time:</label>
-                    <input type="datetime-local" id="end-time" required>
-                </div>
-        
-                <div class="form-group">
-                    <label for="flow">Flow (m³/s):</label>
-                    <input type="number" id="flow" step="0.1" required>
-                </div>
-        
-                <div class="form-actions">
-                    <button type="submit">Submit Trip</button>
-                    <button type="button" id="cancel-trip-btn">Cancel</button>
-                </div>
-            </fieldset>
-        </form>
-        
-    </div>    
-    <button id="add-trip-btn">Add New Trip</button>
-    <table class="trips">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Take-out</th>
-                <th>Distance (km)</th>
-                <th>Flow</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Trip rows will be added dynamically here -->
+        // query public launches and place the markers
+        async function addPublicLaunches() {
+            // get window bounds, used to build overpass query string
+            const bounds = map.getBounds();
+
+            // build query string
+            const query = `
+                [out:json];
+                node["leisure"="slipway"](${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()});out;
+            `;
             
-        </tbody>        
-    </table>    
+            var url = 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query);
+            
+            // get data from url
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
 
-    <div id="trip-details">
-        <h2>Trip Details</h2>
-        <p>Select a trip to view its details.</p>
-    </div>    
-</div>
+                // Process the data returned
+                data.elements.forEach(element => {
+                    if (element.type === 'node') {
+                        // Add marker to the map
+                        var marker = L.marker([element.lat, element.lon], { icon: launchIcon, pane: 'publicLaunchesPane' });
+                        
+                        // If this node has a name identified, add it as a popup
+                        if (element.tags.name) {
+                            marker.bindPopup('<strong>' + element.tags.name + '</strong><br>Lat: ' + element.lat + '<br>Lon: ' + element.lon);
+                        }
+                        else {
+                            marker.bindPopup('Lat: ' + element.lat + '<br>Lon: ' + element.lon);
+                        }
 
-<script type="module">
-    
-    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-    });
+                        public_launches.addLayer(marker);
+                    }
+                });
+            
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        }
 
-    // Initialize the map
-    const map = L.map('map', {
-        center: [42.98, -81.24],
-        zoom: 12,
-        layers: [osm] // Add base layer here, other layers will be added later
-    });
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // Create custom panes for layering
-    map.createPane('userLocationsPane');
-    map.getPane('userLocationsPane').style.zIndex = 210; // Higher z-index
+        const supabaseUrl = 'https://kuuapkkqpvpqekfoicfq.supabase.co';
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1dWFwa2txcHZwcWVrZm9pY2ZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUyMzM1MjQsImV4cCI6MjA1MDgwOTUyNH0.pR3vYyDNMVRLlxcY3pWqZleXr65VUSmcB_owfPhfOBo"
+        const supabase = createClient(supabaseUrl, supabaseKey);
 
-    map.createPane('publicLaunchesPane');
-    map.getPane('publicLaunchesPane').style.zIndex = 200; // Lower z-index
+        async function addUserLocation(e) {
 
-    // Define the layer groups and assign them to the panes
-    var user_locations = L.layerGroup([], { pane: 'userLocationsPane' });
-    var public_launches = L.layerGroup([], { pane: 'publicLaunchesPane' });
+            const name = prompt("Name this location:");
+            if (!name) return;
 
-    // Add layers to the map
-    map.addLayer(public_launches);
-    map.addLayer(user_locations);
-    var launchIcon = L.icon({
-        iconUrl: 'media/boat_launch.png',
-        iconSize: [30, 30], 
-        iconAnchor: [15,0], 
-    });
+            const waterway = prompt("Waterway:");
+            if (!waterway) return;
 
-    var putInIcon = L.icon({
-        iconUrl: 'media/oars.png',
-        iconSize: [30, 30], 
-        iconAnchor: [15, 5],
-    });
-    
-    // query public launches and place the markers
-    async function addPublicLaunches() {
-        // get window bounds, used to build overpass query string
-        const bounds = map.getBounds();
+            const gauge_id = prompt("Gauge ID:") || null;
+            const rec_flow = prompt("Recommended flow:") || null;
+            const min_flow = prompt("Minimum flow:") || null;
+            const max_flow = prompt("Maximum flow:") || null;
+            const latitude = e.latlng.lat;
+            const longitude = e.latlng.lng;
 
-        // build query string
-        const query = `
-            [out:json];
-            node["leisure"="slipway"](${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()});out;
-        `;
-        
-        var url = 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query);
-        
-        // get data from url
-        fetch(url)
-        .then(response => response.json())
-        .then(data => {
-
-            // Process the data returned
-            data.elements.forEach(element => {
-                if (element.type === 'node') {
-                    // Add marker to the map
-                    var marker = L.marker([element.lat, element.lon], { icon: launchIcon, pane: 'publicLaunchesPane' });
+            try {
+                const { data, error } = await supabase
+                    .from('user_location')
+                    .insert([{ 
+                        name: name,
+                        waterway: waterway,
+                        lat: latitude, 
+                        lon: longitude,
+                        gauge_id: gauge_id,
+                        flow_low: min_flow,
+                        flow_high: max_flow,
+                        flow_rec: rec_flow
+                    }]);
                     
-                    // If this node has a name identified, add it as a popup
-                    if (element.tags.name) {
-                        marker.bindPopup(element.tags.name);
+                if (error) {
+                    console.error("Error saving location:", error);
+                    alert("Failed to save the location. Please try again.");
+                } else {
+                    L.marker(e.latlng, { icon: putInIcon })
+                        .addTo(user_locations)
+                        .bindPopup(`${name}\n${waterway}`)
+                        .openPopup();
+                }
+            } catch (err) {
+                console.error("Unexpected error:", err);
+            }        
+            
+        }
+
+        async function loadUserLocations() {
+            try {
+                const { data, error } = await supabase
+                    .from('user_location')
+                    .select('*');
+
+                if (error) {
+                    console.error("Error loading user locations:", error);
+                    return;
+                }
+
+                // Get reference to the list element
+                const locationsList = document.getElementById('user-locations-list');
+                const locationDetails = document.getElementById('location-details');
+
+                // Clear any existing items in the list
+                locationsList.innerHTML = '';
+
+                data.forEach(location => {
+                    const marker = L.marker([location.lat, location.lon], { icon: putInIcon, pane: 'userLocationsPane' } )
+                        .addTo(user_locations);
+
+                        const popupContent = `
+                            <h3>${location.name}</h3>
+                            <strong>${location.waterway}</strong><br>
+                            ${location.flow_rec && (!location.flow_high && !location.flow_low) ? `Rec: ${location.flow_rec}<br>` : ''}
+                            ${location.flow_low && location.flow_high && location.flow_rec ? `Flow: ${location.flow_low} - ${location.flow_high} (${location.flow_rec} rec)` : ''}
+                        `;
+
+                    marker.bindPopup(popupContent);
+
+                    // Add a click event to the marker to update the location details
+                    marker.on('click', () => {
+                        // Update the Location Details section
+                        let detailsHTML = `
+                        <h2>${location.name}</h2>
+                        <span>
+                        <p><strong>Waterway:</strong> ${location.waterway}</p>
+                    `;
+
+                    if (location.flow_rec) {
+                        detailsHTML += `<p><strong>Recommended Flow:</strong> ${location.flow_rec}</p>`;
                     }
 
-                    public_launches.addLayer(marker);
-                }
-            });
-        
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-    }
+                    if (location.flow_low && location.flow_high) {
+                        detailsHTML += `<p><strong>Flow Range:</strong> Min: ${location.flow_low}, Max: ${location.flow_high}</p>`;
+                    }
 
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-    const supabaseUrl = 'https://kuuapkkqpvpqekfoicfq.supabase.co';
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1dWFwa2txcHZwcWVrZm9pY2ZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUyMzM1MjQsImV4cCI6MjA1MDgwOTUyNH0.pR3vYyDNMVRLlxcY3pWqZleXr65VUSmcB_owfPhfOBo"
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    async function addUserLocation(e) {
-
-        const name = prompt("Name this location:");
-        if (!name) return;
-
-        const waterway = prompt("Waterway:");
-        if (!waterway) return;
-
-        const gauge_id = prompt("Gauge ID:");
-        const rec_flow = prompt("Recommended flow:");
-        const min_flow = prompt("Minimum flow:");
-        const max_flow = prompt("Maximim flow");
-        const latitude = e.latlng.lat;
-        const longitude = e.latlng.lng;
-
-        try {
-            const { data, error } = await supabase
-                .from('user_location')
-                .insert([{ 
-                    name: name,
-                    waterway: waterway,
-                    lat: latitude, 
-                    lon: longitude,
-                    gauge_id: gauge_id,
-                    flow_low: min_flow,
-                    flow_high: max_flow,
-                    flow_rec: rec_flow
-                 }]);
-
-            if (error) {
-                console.error("Error saving location:", error);
-                alert("Failed to save the location. Please try again.");
-            } else {
-                L.marker(e.latlng, { icon: putInIcon })
-                    .addTo(user_locations)
-                    .bindPopup(`${name}\n${waterway}`)
-                    .openPopup();
-            }
-        } catch (err) {
-            console.error("Unexpected error:", err);
-        }        
-        
-    }
-
-    async function loadUserLocations() {
-        try {
-            const { data, error } = await supabase
-                .from('user_location')
-                .select('*');
-
-            if (error) {
-                console.error("Error loading user locations:", error);
-                return;
-            }
-
-            // Get reference to the list element
-            const locationsList = document.getElementById('user-locations-list');
-            const locationDetails = document.getElementById('location-details');
-
-            // Clear any existing items in the list
-            locationsList.innerHTML = '';
-
-            data.forEach(location => {
-                const marker = L.marker([location.lat, location.lon], { icon: putInIcon, pane: 'userLocationsPane' } )
-                    .addTo(user_locations)
-                    .bindPopup(`
-                        <strong>${location.name}</strong><br>
-                        ${location.waterway}<br>
-                        Recommended flow: ${location.flow_rec || 'N/A'}<br>
-                        Min: ${location.flow_low || 'N/A'}, Max: ${location.flow_high || 'N/A'}
-                    `);
-
-                // Add a click event to the marker to update the location details
-                marker.on('click', () => {
-                    // Update the Location Details section
-                    locationDetails.innerHTML = `
-                        <h2>${location.name}</h2>
-                        <p><strong>Waterway:</strong> ${location.waterway}</p>
-                        <p><strong>Recommended Flow:</strong> ${location.flow_rec || 'N/A'}</p>
-                        <p><strong>Min Flow:</strong> ${location.flow_low || 'N/A'}</p>
-                        <p><strong>Max Flow:</strong> ${location.flow_high || 'N/A'}</p>
-                    `;
-                });                    
-
-                user_locations.addLayer(marker);
-
-                // Create a list item for the location
-                const listItem = document.createElement('li');
-                listItem.textContent = location.name;
-
-                // Add a click event to zoom to the marker on the map
-                listItem.addEventListener('click', () => {
-                    map.setView([location.lat, location.lon], 12);
-                    marker.openPopup();
+                    detailsHTML += '</span>';
 
                     // Update the Location Details section
-                    locationDetails.innerHTML = `
-                        <h2>${location.name}</h2>
-                        <p><strong>Waterway:</strong> ${location.waterway}</p>
-                        <p><strong>Recommended Flow:</strong> ${location.flow_rec || 'N/A'}</p>
-                        <p><strong>Min Flow:</strong> ${location.flow_low || 'N/A'}</p>
-                        <p><strong>Max Flow:</strong> ${location.flow_high || 'N/A'}</p>
-                    `;                    
+                    locationDetails.innerHTML = detailsHTML;
+
+                    });                    
+
+                    user_locations.addLayer(marker);
+
+                    // Create a list item for the location
+                    const listItem = document.createElement('li');
+                    listItem.textContent = location.name;
+
+                    // Add a click event to zoom to the marker on the map
+                    listItem.addEventListener('click', () => {
+                        map.setView([location.lat, location.lon], 12);
+                        marker.openPopup();
+
+                        // Create the Location Details content dynamically
+                        let detailsHTML = `
+                            <h2>${location.name}</h2>
+                            <p><strong>Waterway:</strong> ${location.waterway}</p>
+                        `;
+
+                        if (location.flow_rec) {
+                            detailsHTML += `<p><strong>Recommended Flow:</strong> ${location.flow_rec}</p>`;
+                        }
+
+                        if (location.flow_low && location.flow_high) {
+                            detailsHTML += `<p><strong>Flow Range:</strong> Min: ${location.flow_low}, Max: ${location.flow_high}</p>`;
+                        }
+
+                        // Update the Location Details section
+                        locationDetails.innerHTML = detailsHTML;
+
+                        // Populate the "Trips Starting From This Location" table
+                        populateTripsForLocation(location.id);
+                    });
+
+
+                    // Append the list item to the unordered list
+                    locationsList.appendChild(listItem);                  
                 });
 
-                // Append the list item to the unordered list
-                locationsList.appendChild(listItem);                  
-            });
+            } catch (err) {
+                console.error("Unexpected error while loading user locations:", err);
+            }
+        }    
 
-        } catch (err) {
-            console.error("Unexpected error while loading user locations:", err);
+        loadUserLocations();
+        addPublicLaunches();
+
+        map.on('moveend',addPublicLaunches);
+        map.on('click', addUserLocation);
+
+        // Add the layer group to the map's layer control
+        var baseLayers = {
+            "OpenStreetMap": osm
+        };
+
+        var overlayLayers = {
+            "User Locations": user_locations,
+            "Public Launches": public_launches
+        };
+
+        L.control.layers(baseLayers, overlayLayers).addTo(map);
+
+        // Function to show the "Add Trip" form
+        document.getElementById('add-trip-btn').addEventListener('click', () => {
+            // Show the form
+            document.getElementById('add-trip-form').style.display = 'block';
+            
+            // Optionally hide the button
+            document.getElementById('add-trip-btn').style.display = 'none';
+        });
+
+        // Function to hide the "Add Trip" form
+        document.getElementById('cancel-trip-btn').addEventListener('click', () => {
+            // Hide the form
+            document.getElementById('add-trip-form').style.display = 'none';
+
+            // Show the button again
+            document.getElementById('add-trip-btn').style.display = 'block';
+        });
+
+        // Function to populate the dropdowns for "From" and "To" with user locations
+        async function loadLocationDropdowns() {
+            try {
+                const { data, error } = await supabase
+                    .from('user_location')
+                    .select('*');
+
+                if (error) {
+                    console.error("Error loading user locations:", error);
+                    return;
+                }
+
+                const fromSelect = document.getElementById('from-location');
+                const toSelect = document.getElementById('to-location');
+
+                // Clear existing options
+                fromSelect.innerHTML = '';
+                toSelect.innerHTML = '';
+
+                // Add default "Select" options
+                fromSelect.innerHTML = '<option value="">Select a location</option>';
+                toSelect.innerHTML = '<option value="">Select a location</option>';
+
+                // Add locations as options
+                data.forEach(location => {
+
+                    const option = document.createElement('option');
+                    option.value = location.id; // Assuming the location ID is a unique identifier
+                    option.textContent = location.name;
+                    fromSelect.appendChild(option);
+
+                    const toOption = document.createElement('option');
+                    toOption.value = location.id;
+                    toOption.textContent = location.name;
+                    toSelect.appendChild(toOption);
+                });
+            } catch (err) {
+                console.error("Unexpected error while loading user locations:", err);
+            }
         }
-    }    
 
-    loadUserLocations();
-    addPublicLaunches();
+        async function addTrip(event) {
+            event.preventDefault();
 
-    map.on('moveend',addPublicLaunches);
-    map.on('click', addUserLocation);
+            console.log('adding trip');
+            
+            const fromLocationId = document.getElementById('from-location').value || null;
+            const toLocationId = document.getElementById('to-location').value || null;
+            const startTime = document.getElementById('start-time').value || null;
+            const endTime = document.getElementById('end-time').value || null;
+            const flow = document.getElementById('flow').value || null;
 
-    // Add the layer group to the map's layer control
-    var baseLayers = {
-        "OpenStreetMap": osm
-    };
-
-    var overlayLayers = {
-        "User Locations": user_locations,
-        "Public Launches": public_launches
-    };
-
-    L.control.layers(baseLayers, overlayLayers).addTo(map);
-
-    // Function to show the "Add Trip" form
-    document.getElementById('add-trip-btn').addEventListener('click', () => {
-        // Show the form
-        document.getElementById('add-trip-form').style.display = 'block';
-        
-        // Optionally hide the button
-        document.getElementById('add-trip-btn').style.display = 'none';
-    });
-
-    // Function to hide the "Add Trip" form
-    document.getElementById('cancel-trip-btn').addEventListener('click', () => {
-        // Hide the form
-        document.getElementById('add-trip-form').style.display = 'none';
-
-        // Show the button again
-        document.getElementById('add-trip-btn').style.display = 'block';
-    });
-
-    // Function to populate the dropdowns for "From" and "To" with user locations
-    async function loadLocationDropdowns() {
-        try {
-            const { data, error } = await supabase
-                .from('user_location')
-                .select('*');
-
-            if (error) {
-                console.error("Error loading user locations:", error);
+            if (!fromLocationId || !toLocationId || !startTime || !endTime || !flow) {
+                alert('Please fill out all fields');
                 return;
             }
 
-            const fromSelect = document.getElementById('from-location');
-            const toSelect = document.getElementById('to-location');
+            try {
+                // Insert trip into the database (replace with the correct table and structure)
+                const { data, error } = await supabase
+                    .from('triplog')
+                    .insert([{
+                        start_location: fromLocationId,
+                        started: startTime,
+                        end_location: toLocationId,
+                        ended: endTime,
+                        flow: flow
+                    }]);
 
-            // Clear existing options
-            fromSelect.innerHTML = '';
-            toSelect.innerHTML = '';
 
-            // Add default "Select" options
-            fromSelect.innerHTML = '<option value="">Select a location</option>';
-            toSelect.innerHTML = '<option value="">Select a location</option>';
-
-            // Add locations as options
-            data.forEach(location => {
-
-                console.log(location);
-
-                const option = document.createElement('option');
-                option.value = location.id; // Assuming the location ID is a unique identifier
-                option.textContent = location.name;
-                fromSelect.appendChild(option);
-
-                const toOption = document.createElement('option');
-                toOption.value = location.id;
-                toOption.textContent = location.name;
-                toSelect.appendChild(toOption);
-            });
-        } catch (err) {
-            console.error("Unexpected error while loading user locations:", err);
-        }
-    }
-
-    async function addTrip() {
-        this.preventDefault();
-
-        const fromLocationId = document.getElementById('from-location').value;
-        const toLocationId = document.getElementById('to-location').value;
-        const startTime = document.getElementById('start-time').value;
-        const endTime = document.getElementById('end-time').value;
-        const flow = document.getElementById('flow').value;
-
-        if (!fromLocationId || !toLocationId || !startTime || !endTime || !flow) {
-            alert('Please fill out all fields');
-            return;
-        }
-
-        try {
-            // Insert trip into the database (replace with the correct table and structure)
-            const { data, error } = await supabase
-                .from('trip')
-                .insert([{
-                    from_location: fromLocationId,
-                    start_time: startTime,
-                    to_location: toLocationId,
-                    end_time: endTime,
-                    flow: flow
-                }]);
-
-            if (error) {
-                console.error('Error saving trip:', error);
-                alert('Failed to save the trip. Please try again.');
-            } else {
-                // Update the trips table dynamically (optional)
-                console.log(data);
-                
-                const tripsTable = document.querySelector('.trips tbody');
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${new Date(startTime).toLocaleDateString()}</td>
-                    <td>${new Date(startTime).toLocaleTimeString()}</td>
-                    <td>${new Date(endTime).toLocaleTimeString()}</td>
-                    <td>${data[0].from_location_name} to ${data[0].to_location_name}</td>
-                    <td>Distance calculation here</td>
-                    <td>${flow}</td>
-                `;
-                tripsTable.appendChild(newRow);
+                if (error) {
+                    console.error('Error saving trip:', error);
+                    alert('Failed to save the trip. Please try again.');
+                } else {
+                    // Update the trips table dynamically (optional)
+                    console.log('data saved, updating html: ' + data);
+                    
+                    populateTripsTable();
+                }
+            } catch (err) {
+                console.error('Unexpected error while adding trip:', err);
             }
-        } catch (err) {
-            console.error('Unexpected error while adding trip:', err);
+
+            // Reset the form
+            document.getElementById('trip-form').reset();
+            document.getElementById('add-trip-form').style.display = 'none';
+            document.getElementById('add-trip-btn').style.display = 'block';
         }
 
-        // Reset the form
-        document.getElementById('trip-form').reset();
-        document.getElementById('add-trip-form').style.display = 'none';
-        document.getElementById('add-trip-btn').style.display = 'block';
-    }
+        // Event listener to handle trip form submission
+        document.getElementById('trip-form').addEventListener('submit', addTrip);
 
-    // Event listener to handle trip form submission
-    document.getElementById('trip-form').addEventListener('submit', addTrip());
+        // Load locations when the page loads
+        loadLocationDropdowns();
 
-    // Load locations when the page loads
-    loadLocationDropdowns();
+        async function populateTripsTable() {
+            try {
+                const { data, error } = await supabase
+                    .from('triplog') // Replace with the actual table name if it's different
+                    .select(`
+                        id,
+                        started,
+                        ended,
+                        flow,
+                        distance,
+                        start_location (id, name),
+                        end_location (id, name)
+                    `);
 
-</script>
+                if (error) {
+                    console.error("Error loading trips:", error);
+                    return;
+                }
+
+                const tripsTable = document.querySelector('.trips tbody');
+                tripsTable.innerHTML = ''; // Clear the table before adding new rows
+
+                // Populate the table with trips data
+                data.forEach(trip => {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${trip.started ? new Date(trip.started).toLocaleDateString() : 'N/A'}</td>
+                        <td>${trip.start_location?.name || 'Unknown'}</td>
+                        <td>${trip.end_location?.name || 'Unknown'}</td>
+                    `;
+
+                // Add click event to show trip details
+                newRow.addEventListener('click', () => {
+                    showTripDetails(trip);
+                });
+
+                    tripsTable.appendChild(newRow);
+                });
+            } catch (err) {
+                console.error("Unexpected error while populating trips table:", err);
+            }
+        }
+
+        populateTripsTable();
+
+        function showTripDetails(trip) {
+    const tripDetails = document.getElementById('trip-details');
+    tripDetails.innerHTML = `
+        <h2>Trip Details</h2>
+        
+        <p><strong>Date:</strong> ${trip.started ? new Date(trip.started).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</p>
+        
+        <p><strong>Start:</strong> ${trip.started ? new Date(trip.started).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : 'N/A'}
+           <strong>End:</strong> ${trip.ended ? new Date(trip.ended).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : 'N/A'}</p>
+        
+        <p><strong>Distance:</strong> ${trip.distance ? `${trip.distance} km` : 'N/A'}</p>
+        
+        <p><strong>Flow:</strong> ${trip.flow ? `${trip.flow} m³/s` : 'N/A'}</p>
+    `;
+}
 
 
+        async function populateTripsForLocation(locationId) {
+            try {
+                console.log(locationId);
 
-</body>
-</html>
+                // Query trips starting from the selected location
+                const { data, error } = await supabase
+                    .from('triplog') // Replace with your actual table name
+                    .select(`
+                        started,
+                        ended,
+                        distance,
+                        flow,
+                        start_location (id, name),
+                        end_location (id, name)
+                    `)
+                    .eq('start_location', locationId); // Assuming start_location stores the location ID directly
+
+
+                if (error) {
+                    console.error("Error loading trips for location:", error);
+                    return;
+                }
+
+                const tripsTableBody = document.querySelector('.starting-trip tbody');
+                tripsTableBody.innerHTML = ''; // Clear existing rows
+
+                // Populate the table with trips data
+                data.forEach(trip => {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${trip.started ? new Date(trip.started).toLocaleDateString() : 'N/A'}</td>
+                        <td>${trip.end_location?.name || 'Unknown'}</td>
+                        <td>${trip.distance || 'N/A'} km</td>
+                        <td>${trip.flow || 'N/A'} m³/s</td>
+                    `;
+                    tripsTableBody.appendChild(newRow);
+
+                    // Show the table
+                    showTripsTable();
+                });
+
+            } catch (err) {
+                console.error("Unexpected error while populating trips for location:", err);
+            }
+        }
+        
+        function showTripsTable() {
+            const tripsLog = document.getElementById('tripslog');
+            tripsLog.classList.remove('hidden'); // Remove the hidden class to make it visible
+        }
+
+        function hideTripsTable() {
+            const tripsLog = document.getElementById('tripslog');
+            tripsLog.classList.add('hidden'); // Add the hidden class to hide it
+        }
+    </script>
+
+    </body>
+    </html>
