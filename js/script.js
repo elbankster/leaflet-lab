@@ -619,11 +619,6 @@
             tripsLog.classList.remove('hidden'); // Remove the hidden class to make it visible
         }
 
-        function hideTripsTable() {
-            const tripsLog = document.getElementById('tripslog');
-            tripsLog.classList.add('hidden'); // Add the hidden class to hide it
-        }
-
         function generatePopupContent(location, currentConditions) {
             console.log(location);
             console.log(currentConditions);
