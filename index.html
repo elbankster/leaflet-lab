@@ -243,7 +243,7 @@
                 } else {
                     L.marker(e.latlng, { icon: putInIcon })
                         .addTo(user_locations)
-                        .bindPopup(`${name}\n${waterway}`)
+                        .bindPopup(`${name}<br>${waterway}`)
                         .openPopup();
                 }
             } catch (err) {
@@ -251,6 +251,101 @@
             }        
             
         }
+
+        async function updateLocationDetails(marker, location) {
+
+            const currentConditions = await getGaugeDetails(location.gauge_id);
+
+            console.log(currentConditions);
+
+            let popupContent = `
+                <h2>${location.name}</h2>
+                <h3>${location.waterway}</h3>
+                <p>Flow: ${currentConditions.flow} m³/s<br>
+                Level: ${currentConditions.stage} m</p>
+                <p>${currentConditions.currentCondition}</p>
+                <p>${currentConditions.date} ${currentConditions.time}</p>
+            `;
+
+            marker.bindPopup(popupContent);
+
+            const locationDetails = document.getElementById('location-details');
+
+            // Update the Location Details section
+            let detailsHTML = `
+                <h2>${location.name}</h2>
+                <span>
+                <p><strong>Waterway:</strong> ${location.waterway}</p>
+            `;
+
+            if (location.flow_rec) {
+                detailsHTML += `<p><strong>Recommended Flow:</strong> ${location.flow_rec}</p>`;
+            }
+
+            if (location.flow_low && location.flow_high) {
+                detailsHTML += `<p><strong>Flow Range:</strong> Min: ${location.flow_low}, Max: ${location.flow_high}</p>`;
+            }
+
+            detailsHTML += '</span>';
+
+            // Update the Location Details section
+            locationDetails.innerHTML = detailsHTML;
+        }
+
+        async function getGaugeDetails(gaugeId) {
+            try {
+                // Fetch the XML file
+                const response = await fetch('webservice/current_conditions.kml');
+                const xmlText = await response.text();
+                const details = {};
+                
+                // Parse the XML
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                
+                // Find the relevant Placemark
+                const placemarks = xmlDoc.getElementsByTagName('Placemark');
+                for (let placemark of placemarks) {
+                    const name = placemark.getElementsByTagName('name')[0]?.textContent;
+                    
+                    if (name === gaugeId) {
+                        // Extract data from ExtendedData
+                        const extendedData = placemark.getElementsByTagName('ExtendedData')[0];
+                        const dataElements = extendedData.getElementsByTagName('Data');
+                        const details = {};
+
+                        for (let data of dataElements) {
+                            const dataName = data.getAttribute('name');
+                            const dataValue = data.getElementsByTagName('value')[0]?.textContent;
+                            
+                            if (dataName === 'Latest Stage Value' || dataName === 'Latest Discharge Value') {
+                                const match = dataValue.match(/([\d.]+)\s[^\s]+\s@\s([\d-]+)\s([\d:]+)/);
+                                if (match) {
+                                    const [, value, date, time] = match;
+                                    if (dataName === 'Latest Stage Value') {
+                                        details.stage = parseFloat(value);
+                                    } else if (dataName === 'Latest Discharge Value') {
+                                        details.flow = parseFloat(value);
+                                    }
+                                    details.date = date;
+                                    details.time = time;
+                                }
+                            } else if (dataName === 'Current Condition') {
+                                details.currentCondition = dataValue;
+                            }
+                        }
+
+                        return details;
+                    }
+                }
+
+                throw new Error(`Gauge ID ${gaugeId} not found in the XML.`);
+            } catch (error) {
+                console.error('Error fetching or parsing XML:', error);
+                return null;
+            }
+        }
+
 
         async function loadUserLocations() {
             try {
@@ -274,38 +369,19 @@
                     const marker = L.marker([location.lat, location.lon], { icon: putInIcon, pane: 'userLocationsPane' } )
                         .addTo(user_locations);
 
-                        const popupContent = `
-                            <h3>${location.name}</h3>
-                            <strong>${location.waterway}</strong><br>
-                            ${location.flow_rec && (!location.flow_high && !location.flow_low) ? `Rec: ${location.flow_rec}<br>` : ''}
-                            ${location.flow_low && location.flow_high && location.flow_rec ? `Flow: ${location.flow_low} - ${location.flow_high} (${location.flow_rec} rec)` : ''}
-                        `;
+                    const popupContent = `
+                        <h2>${location.name}</h2>
+                        <h3>${location.waterway}</h3>
+                        ${location.flow_rec && (!location.flow_high && !location.flow_low) ? `Flow recommendation: ${location.flow_rec}<br>` : ''}
+                        ${location.flow_low && location.flow_high && location.flow_rec ? `Flow: ${location.flow_low} - ${location.flow_high} (${location.flow_rec} rec)` : ''}
+                    `;
 
                     marker.bindPopup(popupContent);
 
                     // Add a click event to the marker to update the location details
-                    marker.on('click', () => {
-                        // Update the Location Details section
-                        let detailsHTML = `
-                        <h2>${location.name}</h2>
-                        <span>
-                        <p><strong>Waterway:</strong> ${location.waterway}</p>
-                    `;
-
-                    if (location.flow_rec) {
-                        detailsHTML += `<p><strong>Recommended Flow:</strong> ${location.flow_rec}</p>`;
-                    }
-
-                    if (location.flow_low && location.flow_high) {
-                        detailsHTML += `<p><strong>Flow Range:</strong> Min: ${location.flow_low}, Max: ${location.flow_high}</p>`;
-                    }
-
-                    detailsHTML += '</span>';
-
-                    // Update the Location Details section
-                    locationDetails.innerHTML = detailsHTML;
-
-                    });                    
+                    marker.on('click',() => { 
+                        updateLocationDetails(marker, location); 
+                    });
 
                     user_locations.addLayer(marker);
 
@@ -316,24 +392,10 @@
                     // Add a click event to zoom to the marker on the map
                     listItem.addEventListener('click', () => {
                         map.setView([location.lat, location.lon], 12);
+
+                        updateLocationDetails(marker, location);                        
+                        
                         marker.openPopup();
-
-                        // Create the Location Details content dynamically
-                        let detailsHTML = `
-                            <h2>${location.name}</h2>
-                            <p><strong>Waterway:</strong> ${location.waterway}</p>
-                        `;
-
-                        if (location.flow_rec) {
-                            detailsHTML += `<p><strong>Recommended Flow:</strong> ${location.flow_rec}</p>`;
-                        }
-
-                        if (location.flow_low && location.flow_high) {
-                            detailsHTML += `<p><strong>Flow Range:</strong> Min: ${location.flow_low}, Max: ${location.flow_high}</p>`;
-                        }
-
-                        // Update the Location Details section
-                        locationDetails.innerHTML = detailsHTML;
 
                         // Populate the "Trips Starting From This Location" table
                         populateTripsForLocation(location.id);
@@ -526,20 +588,20 @@
         populateTripsTable();
 
         function showTripDetails(trip) {
-    const tripDetails = document.getElementById('trip-details');
-    tripDetails.innerHTML = `
-        <h2>Trip Details</h2>
-        
-        <p><strong>Date:</strong> ${trip.started ? new Date(trip.started).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</p>
-        
-        <p><strong>Start:</strong> ${trip.started ? new Date(trip.started).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : 'N/A'}
-           <strong>End:</strong> ${trip.ended ? new Date(trip.ended).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : 'N/A'}</p>
-        
-        <p><strong>Distance:</strong> ${trip.distance ? `${trip.distance} km` : 'N/A'}</p>
-        
-        <p><strong>Flow:</strong> ${trip.flow ? `${trip.flow} m³/s` : 'N/A'}</p>
-    `;
-}
+            const tripDetails = document.getElementById('trip-details');
+            tripDetails.innerHTML = `
+                <h2>Trip Details</h2>
+                
+                <p><strong>Date:</strong> ${trip.started ? new Date(trip.started).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</p>
+                
+                <p><strong>Start:</strong> ${trip.started ? new Date(trip.started).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : 'N/A'}
+                <strong>End:</strong> ${trip.ended ? new Date(trip.ended).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : 'N/A'}</p>
+                
+                <p><strong>Distance:</strong> ${trip.distance ? `${trip.distance} km` : 'N/A'}</p>
+                
+                <p><strong>Flow:</strong> ${trip.flow ? `${trip.flow} m³/s` : 'N/A'}</p>
+            `;
+        }
 
 
         async function populateTripsForLocation(locationId) {
@@ -599,5 +661,5 @@
         }
     </script>
 
-    </body>
-    </html>
+</body>
+</html>

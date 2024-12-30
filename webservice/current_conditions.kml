@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Placemark>
+      <name>02FF008</name>
+      <Point>
+        <coordinates>-81.631511,43.16413,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>PARKHILL CREEK ABOVE PARKHILL RESERVOIR</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>11.911 m @ 2024-12-29 19:20:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>23.9 m³/s @ 2024-12-29 19:20:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>All-time high for this day (100th percentile - maximum)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02FF013</name>
+      <Point>
+        <coordinates>-81.44767,43.18056,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>LITTLE AUSABLE RIVER NEAR LUCAN CROSSING</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>3.922 m @ 2024-12-29 19:10:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>30.5 m³/s @ 2024-12-29 19:10:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>All-time high for this day (100th percentile - maximum)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD001</name>
+      <Point>
+        <coordinates>-81.20858,42.97356,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>THAMES RIVER NEAR EALING</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>1.511 m @ 2024-12-29 19:20:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>57.2 m³/s @ 2024-12-29 19:20:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD003</name>
+      <Point>
+        <coordinates>-81.18283,43.04078,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>NORTH THAMES RIVER BELOW FANSHAWE DAM</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>6.924 m @ 2024-12-29 19:30:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>56.4 m³/s @ 2024-12-29 19:30:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD004</name>
+      <Point>
+        <coordinates>-80.99486,43.05911,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>MIDDLE THAMES RIVER AT THAMESFORD</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>9.728 m @ 2024-12-29 19:25:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>24.2 m³/s @ 2024-12-29 19:25:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD005</name>
+      <Point>
+        <coordinates>-81.14562,43.25575,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>NORTH THAMES RIVER AT ST. MARYS</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>3.740 m @ 2024-12-29 19:15:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>78.2 m³/s @ 2024-12-29 19:15:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD008</name>
+      <Point>
+        <coordinates>-81.28044,43.01367,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>MEDWAY RIVER AT LONDON</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>4.675 m @ 2024-12-29 18:40:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>32.0 m³/s @ 2024-12-29 18:40:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>No discharge data available today</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD014</name>
+      <Point>
+        <coordinates>-81.20678,43.45042,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>NORTH THAMES RIVER NEAR MITCHELL</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>4.718 m @ 2024-12-29 19:20:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>29.7 m³/s @ 2024-12-29 19:20:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD015</name>
+      <Point>
+        <coordinates>-81.19214,43.14931,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>NORTH THAMES RIVER NEAR THORNDALE</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>2.952 m @ 2024-12-29 19:25:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>107 m³/s @ 2024-12-29 19:25:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD016</name>
+      <Point>
+        <coordinates>-80.88617,43.04128,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>THAMES RIVER AT INGERSOLL</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>2.081 m @ 2024-12-29 19:25:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>19.5 m³/s @ 2024-12-29 19:25:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Above normal (76th – 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD027</name>
+      <Point>
+        <coordinates>-80.95461,42.98156,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>REYNOLDS CREEK NEAR PUTNAM</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>7.012 m @ 2024-12-29 19:00:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>12.2 m³/s @ 2024-12-29 19:00:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GD028</name>
+      <Point>
+        <coordinates>-81.25344,43.022,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>STONEY CREEK AT LONDON</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>7.941 m @ 2024-12-29 19:19:55 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>6.81 m³/s @ 2024-12-29 19:19:55 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GE002</name>
+      <Point>
+        <coordinates>-81.33178,42.9625,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>THAMES RIVER AT BYRON</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>3.207 m @ 2024-12-29 18:45:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>152 m³/s @ 2024-12-29 18:45:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>No discharge data available today</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GE005</name>
+      <Point>
+        <coordinates>-81.35131,42.93411,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>DINGMAN CREEK BELOW LAMBETH</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>5.618 m @ 2024-12-29 19:35:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>10.8 m³/s @ 2024-12-29 19:35:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GE008</name>
+      <Point>
+        <coordinates>-81.41803,42.966,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>OXBOW CREEK NEAR KILWORTH</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>5.426 m @ 2024-12-29 18:35:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>8.02 m³/s @ 2024-12-29 18:35:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>No discharge data available today</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>02GG005</name>
+      <Point>
+        <coordinates>-81.62714,42.95886,0</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="Name">
+          <value>SYDENHAM RIVER AT STRATHROY</value>
+        </Data>
+        <Data name="Contributed">
+          <value>0</value>
+        </Data>
+        <Data name="Data Provided By">
+          <value>WATER SURVEY OF CANADA (DOE) (CANADA)</value>
+        </Data>
+        <Data name="Note">
+          <value>For inquiries or requests, please go to https://weather.gc.ca/mainmenu/water_contact_us_e.html.</value>
+        </Data>
+        <Data name="Remark">
+          <value>Current condition is based on the latest discharge data.</value>
+        </Data>
+        <Data name="Latest Stage Value">
+          <value>2.873 m @ 2024-12-29 19:15:00 (EST)</value>
+        </Data>
+        <Data name="Latest Discharge Value">
+          <value>9.82 m³/s @ 2024-12-29 19:15:00 (EST)</value>
+        </Data>
+        <Data name="Current Condition">
+          <value>Much above normal (&gt; 90th percentile)</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+  </Document>
+</kml>
